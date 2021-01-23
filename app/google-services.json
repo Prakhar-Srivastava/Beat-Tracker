@@ -8,17 +8,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:693508094436:android:622454fa5fa2e34e09aff1",
+        "mobilesdk_app_id": "1:693508094436:android:31c2a8f58957651f09aff1",
         "android_client_info": {
-          "package_name": "com.example.beattracker"
+          "package_name": "com.github.abdularis.trackmylocation"
         }
       },
       "oauth_client": [
         {
-          "client_id": "693508094436-4ga87tnb0hvrfr995ub8r8lrqss4s9tf.apps.googleusercontent.com",
+          "client_id": "693508094436-6buo83eqniqbgg5h28npd789kppub55n.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.beattracker",
+            "package_name": "com.github.abdularis.trackmylocation",
             "certificate_hash": "5f6948dd615a983cbd37a726514334da69da2658"
           }
         },
@@ -45,17 +45,17 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:693508094436:android:31c2a8f58957651f09aff1",
+        "mobilesdk_app_id": "1:693508094436:android:ddaf6b6e7271e43109aff1",
         "android_client_info": {
-          "package_name": "com.github.abdularis.trackmylocation"
+          "package_name": "com.prosthetik.beattracker"
         }
       },
       "oauth_client": [
         {
-          "client_id": "693508094436-6buo83eqniqbgg5h28npd789kppub55n.apps.googleusercontent.com",
+          "client_id": "693508094436-2th5f27trifn6frspqub0lct9iimukef.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.github.abdularis.trackmylocation",
+            "package_name": "com.prosthetik.beattracker",
             "certificate_hash": "5f6948dd615a983cbd37a726514334da69da2658"
           }
         },

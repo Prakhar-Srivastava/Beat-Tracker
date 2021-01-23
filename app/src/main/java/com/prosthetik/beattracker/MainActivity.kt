@@ -1,11 +1,11 @@
 package com.prosthetik.beattracker
 
-import com.prosthetik.beattracker.R
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.beattracker.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -40,14 +40,14 @@ class MainActivity : AppCompatActivity() {
 
         val account: GoogleSignInAccount? = GoogleSignIn.getLastSignedInAccount(this)
 
-        if(account != null){
-            val openDash = Intent(this, DashboardActivity::class.java).apply {
-                putExtra("name", account.givenName)
-                putExtra("avatar", account.photoUrl)
-            }
-
-            startActivity(openDash)
-        }
+//        if(account != null){
+//            val openDash = Intent(this, DashboardActivity::class.java).apply {
+//                putExtra("name", account.givenName)
+//                putExtra("avatar", account.photoUrl)
+//            }
+//
+//            startActivity(openDash)
+//        }
 
         //make the button pretty
 
