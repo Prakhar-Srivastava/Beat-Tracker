@@ -39,14 +39,14 @@ class MainActivity : AppCompatActivity() {
 
         val account: GoogleSignInAccount? = GoogleSignIn.getLastSignedInAccount(this)
 
-//        if(account != null){
-//            val openDash = Intent(this, DashboardActivity::class.java).apply {
-//                putExtra("name", account.givenName)
-//                putExtra("avatar", account.photoUrl)
-//            }
-//
-//            startActivity(openDash)
-//        }
+        if(account != null){
+            val openDash = Intent(this, DashboardActivity::class.java).apply {
+                putExtra("name", account.givenName)
+                putExtra("avatar", account.photoUrl)
+            }
+
+            startActivity(openDash)
+        }
 
         //make the button pretty
 
