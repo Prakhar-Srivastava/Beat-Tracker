@@ -1,0 +1,85 @@
+{
+  "project_info": {
+    "project_number": "693508094436",
+    "firebase_url": "https://beat-track-default-rtdb.firebaseio.com",
+    "project_id": "beat-track",
+    "storage_bucket": "beat-track.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:693508094436:android:622454fa5fa2e34e09aff1",
+        "android_client_info": {
+          "package_name": "com.example.beattracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "693508094436-4ga87tnb0hvrfr995ub8r8lrqss4s9tf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.beattracker",
+            "certificate_hash": "5f6948dd615a983cbd37a726514334da69da2658"
+          }
+        },
+        {
+          "client_id": "693508094436-djvvd393857o1n5shhonv6826gr1b22p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBv1bxcBebEXt4J5PW777RbmwmlqjtlG6A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "693508094436-djvvd393857o1n5shhonv6826gr1b22p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:693508094436:android:31c2a8f58957651f09aff1",
+        "android_client_info": {
+          "package_name": "com.github.abdularis.trackmylocation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "693508094436-6buo83eqniqbgg5h28npd789kppub55n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.github.abdularis.trackmylocation",
+            "certificate_hash": "5f6948dd615a983cbd37a726514334da69da2658"
+          }
+        },
+        {
+          "client_id": "693508094436-djvvd393857o1n5shhonv6826gr1b22p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBv1bxcBebEXt4J5PW777RbmwmlqjtlG6A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "693508094436-djvvd393857o1n5shhonv6826gr1b22p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
