@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Beat Tracker</string>
+    <string name="beat_tracker">Beat <br /> Tracker</string>
 </resources>
