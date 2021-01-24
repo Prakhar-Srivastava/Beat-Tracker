@@ -30,7 +30,16 @@ class MainActivity : AppCompatActivity() {
     private fun onSignIn(task: Task<GoogleSignInAccount>){
         val mAcc : GoogleSignInAccount? = task.result
 
-        println(mAcc)
+        if(mAcc != null){
+            val openDash = Intent(this, DashboardActivity::class.java).apply {
+                putExtra("name", mAcc.givenName)
+                putExtra("avatar", mAcc.photoUrl)
+                putExtra("email", mAcc.email)
+            }
+
+            startActivity(openDash)
+            finish()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,9 +52,11 @@ class MainActivity : AppCompatActivity() {
             val openDash = Intent(this, DashboardActivity::class.java).apply {
                 putExtra("name", account.givenName)
                 putExtra("avatar", account.photoUrl)
+                putExtra("email", account.email)
             }
 
             startActivity(openDash)
+            finish()
         }
 
         //make the button pretty
