@@ -15,6 +15,8 @@ class DashboardActivity : AppCompatActivity() {
         setContentView(R.layout.activity_dashboard2)
 
         val nameTextView = findViewById<TextView>(R.id.user_name)
+
+
         nameTextView.text = intent.getStringExtra("name")
 
         val bottomSheetLayout = findViewById<ConstraintLayout>(R.id.bottomFragment)
