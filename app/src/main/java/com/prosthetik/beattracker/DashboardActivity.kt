@@ -13,22 +13,28 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class DashboardActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
-    private lateinit var mLocationManager: LocationManager
+    private lateinit var locationProvider: FusedLocationProviderClient
 
     companion object{
         @JvmStatic val locationPermissionCode: Int = 0x3f
+        @JvmStatic val locationDeniedToken = CancellationTokenSource()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -44,12 +50,23 @@ class DashboardActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mMap.isMyLocationEnabled = true
 
-        // Add a marker in Sydney and move the camera
-//        val sydney = LatLng(49.246292, -123.116226)
-//        mMap.addMarker(MarkerOptions()
-//                .position(sydney)
-//                .title("Marker in Sydney"))
-//        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, mMap.maxZoomLevel))
+        //wait until the location provider is initialized
+        while (!this::locationProvider.isInitialized);
+
+        locationProvider.getCurrentLocation(
+            LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY,
+            locationDeniedToken.token
+        ).addOnSuccessListener { location: Location ->
+            val me = LatLng(location.latitude, location.longitude)
+            val lookHere = CameraPosition.Builder()
+                .target(me)
+                .zoom(17f)
+                .bearing(90f)
+                .tilt(30f)
+                .build()
+
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(lookHere))
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -66,6 +83,9 @@ class DashboardActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard2)
+
+        //initialize location provider
+        locationProvider = LocationServices.getFusedLocationProviderClient(this)
 
         //manage Map Fragment here
         val mapFragment = supportFragmentManager
