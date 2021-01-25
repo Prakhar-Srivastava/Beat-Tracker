@@ -15,8 +15,11 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.firebase.database.DatabaseReference
 
 class LocationForegroundService : Service() {
+    private lateinit var database: DatabaseReference
+
     companion object{
         @JvmStatic val LOCATION_SERVICE_ID: Int = 0x42
         @JvmStatic val ACTION_START_LOCATION_SERVICE: String = "startLocationService"
