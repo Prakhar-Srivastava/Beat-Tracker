@@ -1,8 +1,11 @@
 package com.prosthetik.beattracker
 
 import android.Manifest
+import android.app.ActivityManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.DashPathEffect
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -35,6 +38,83 @@ class DashboardActivity : AppCompatActivity(), OnMapReadyCallback {
     companion object{
         @JvmStatic val locationPermissionCode: Int = 0x3f
         @JvmStatic val locationDeniedToken = CancellationTokenSource()
+        @JvmStatic val GOING_LIVE: String = "Going live..."
+        @JvmStatic val OFF_THE_RADAR: String = "You're off the radar."
+    }
+
+    private fun isLocationServiceRunning(): Boolean {
+        val mgr = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager?
+
+        val nServices: Int? = (
+                mgr?.getRunningServices(Int.MAX_VALUE)?.filter {
+                    LocationForegroundService::class.java.name == it.service.className
+                    && it.foreground
+                })?.size
+
+        return nServices != null && nServices > 0
+    }
+
+    private fun goLive(): String {
+        if(!isLocationServiceRunning()){
+            val launchService = Intent(
+                applicationContext,
+                LocationForegroundService::class.java
+            )
+            launchService.action = LocationForegroundService.ACTION_START_LOCATION_SERVICE
+
+            val email: String? = intent.getStringExtra("email")
+            val safeUsername: String? = email
+                    ?.substring(0, email.indexOf("@"))
+                    ?.replace(".", "")
+
+            if (safeUsername != null)
+                launchService.putExtra("email", safeUsername)
+
+            startService(launchService)
+            return GOING_LIVE
+        }
+        return ""
+    }
+
+    private fun stopBroadcasting(): String {
+        if(isLocationServiceRunning()){
+            val launchService = Intent(
+                applicationContext,
+                LocationForegroundService::class.java
+            )
+            launchService.action = LocationForegroundService.ACTION_STOP_LOCATION_SERVICE
+            startService(launchService)
+            return OFF_THE_RADAR
+        }
+        return ""
+    }
+
+    private fun centerMap() {
+        //wait until the location provider is initialized
+        while (!this::locationProvider.isInitialized);
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            locationProvider.getCurrentLocation(
+                LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY,
+                locationDeniedToken.token
+            ).addOnSuccessListener { location: Location ->
+                val me = LatLng(location.latitude, location.longitude)
+                val lookHere = CameraPosition.Builder()
+                    .target(me)
+                    .zoom(17f)
+                    .bearing(90f)
+                    .tilt(30f)
+                    .build()
+
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(lookHere))
+            }
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -46,26 +126,9 @@ class DashboardActivity : AppCompatActivity(), OnMapReadyCallback {
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), locationPermissionCode)
-        }
-
-        mMap.isMyLocationEnabled = true
-
-        //wait until the location provider is initialized
-        while (!this::locationProvider.isInitialized);
-
-        locationProvider.getCurrentLocation(
-            LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY,
-            locationDeniedToken.token
-        ).addOnSuccessListener { location: Location ->
-            val me = LatLng(location.latitude, location.longitude)
-            val lookHere = CameraPosition.Builder()
-                .target(me)
-                .zoom(17f)
-                .bearing(90f)
-                .tilt(30f)
-                .build()
-
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(lookHere))
+        } else {
+            mMap.isMyLocationEnabled = true
+            centerMap()
         }
     }
 
@@ -73,6 +136,7 @@ class DashboardActivity : AppCompatActivity(), OnMapReadyCallback {
         if (requestCode == locationPermissionCode) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
+                if(this::mMap.isInitialized) centerMap()
             }
             else {
                 Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
@@ -95,6 +159,8 @@ class DashboardActivity : AppCompatActivity(), OnMapReadyCallback {
 
         //name to display below "Welcome," message
         val nameTextView = findViewById<TextView>(R.id.user_name)
+
+
         nameTextView.text = intent.getStringExtra("name")
 
         //manage bottomSheet Fragment here
@@ -108,10 +174,11 @@ class DashboardActivity : AppCompatActivity(), OnMapReadyCallback {
         findViewById<TextView>(R.id.fragment_email).text = "for " + intent.getStringExtra("email")
 
         val liveButton = findViewById<SwitchMaterial>(R.id.shareLocation)
+        liveButton.isChecked = isLocationServiceRunning()
         liveButton.setOnCheckedChangeListener { _, isChecked: Boolean ->
             val msg: String = when(isChecked){
-                true -> "Going live..."
-                false -> "You're off the radar."
+                true -> goLive()
+                false -> stopBroadcasting()
             }
 
             Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
