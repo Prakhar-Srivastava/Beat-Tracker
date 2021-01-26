@@ -16,9 +16,11 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
 class LocationForegroundService : Service() {
-    private lateinit var database: DatabaseReference
+    private lateinit var database: FirebaseDatabase
+    private lateinit var ref: DatabaseReference
 
     companion object{
         @JvmStatic val LOCATION_SERVICE_ID: Int = 0x42
@@ -26,13 +28,14 @@ class LocationForegroundService : Service() {
         @JvmStatic val ACTION_STOP_LOCATION_SERVICE: String = "stopLocationService"
         @JvmStatic val channelId: String = "location_notification_channel"
     }
+
     private val locationCallback = object : LocationCallback(){
         override fun onLocationResult(locationResult: LocationResult?) {
             super.onLocationResult(locationResult)
 
             if(locationResult?.lastLocation != null){
                 val lat: Double = locationResult.lastLocation.latitude
-                val lng:Double = locationResult.lastLocation.longitude
+                val lng: Double = locationResult.lastLocation.longitude
 
                 Log.d("LOCATION_UPDATE", "$lat°N $lng°E.")
             }
@@ -45,7 +48,11 @@ class LocationForegroundService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when(intent?.action){
-            ACTION_START_LOCATION_SERVICE -> startLocationService()
+            ACTION_START_LOCATION_SERVICE -> {
+                database = FirebaseDatabase.getInstance()
+                ref = intent.getStringExtra("email")?.let { database.getReference(it) }!!
+                startLocationService()
+            }
             ACTION_STOP_LOCATION_SERVICE -> stopLocationService()
         }
 
@@ -104,7 +111,7 @@ class LocationForegroundService : Service() {
             LocationServices.getFusedLocationProviderClient(this)
                 .requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
 
-            startForeground(LocationForegroundService.LOCATION_SERVICE_ID, notifBuilder.build())
+            startForeground(LOCATION_SERVICE_ID, notifBuilder.build())
         }
     }
 

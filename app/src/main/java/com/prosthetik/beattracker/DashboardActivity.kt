@@ -61,6 +61,15 @@ class DashboardActivity : AppCompatActivity(), OnMapReadyCallback {
                 LocationForegroundService::class.java
             )
             launchService.action = LocationForegroundService.ACTION_START_LOCATION_SERVICE
+
+            val email: String? = intent.getStringExtra("email")
+            val safeUsername: String? = email
+                    ?.substring(0, email.indexOf("@"))
+                    ?.replace(".", "")
+
+            if (safeUsername != null)
+                launchService.putExtra("email", safeUsername)
+
             startService(launchService)
             return GOING_LIVE
         }
