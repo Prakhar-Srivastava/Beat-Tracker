@@ -17,6 +17,7 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.prosthetik.beattracker.datamodels.CurrentLocation
 
 class LocationForegroundService : Service() {
     private lateinit var database: FirebaseDatabase
@@ -36,6 +37,9 @@ class LocationForegroundService : Service() {
             if(locationResult?.lastLocation != null){
                 val lat: Double = locationResult.lastLocation.latitude
                 val lng: Double = locationResult.lastLocation.longitude
+                val model = CurrentLocation(System.currentTimeMillis(), lat, lng)
+                val id: String? = ref.push().key
+                ref.child(id!!).setValue(model)
 
                 Log.d("LOCATION_UPDATE", "$lat°N $lng°E.")
             }
