@@ -74,11 +74,7 @@ class MainActivity : AppCompatActivity() {
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        signInButton.setOnClickListener(object :View.OnClickListener{
-            override fun onClick(v: View?) {
-                buttonClick(v)
-            }
-        })
+        signInButton.setOnClickListener { v -> buttonClick(v) }
     }
 
     private fun buttonClick(view: View?){
